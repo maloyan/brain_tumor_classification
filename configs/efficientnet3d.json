@@ -1,4 +1,6 @@
 {
+    "project": "Brain Tumor",
+    "model_name": "efficientnet3d",
     "seed": 42,
     "data_directory": "../input/rsna-miccai-brain-tumor-radiogenomic-classification",
     "pytorch3dpath": "../input/efficientnetpyttorch3d/EfficientNet-PyTorch-3D",
@@ -8,6 +10,16 @@
         "T1wCE",
         "T2w"
     ],
+    "mri_type": "all",
+    "batch_size": 4,
+    "num_workers": 8,
+    "device": "cuda",
+    "lr": 0.00017,
+    "epochs": 20,
+    "reduce_factor": 0.7,
+    "patience": 5,
+    "device_ids": [0, 1, 2, 3, 4],
+
     "SIZE": 256,
     "NUM_IMAGES": 64
 }
