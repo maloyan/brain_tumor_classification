@@ -10,7 +10,7 @@ import torch
 from pydicom.pixel_data_handlers.util import apply_voi_lut
 
 
-def load_dicom_image(path, img_size=SIZE, voi_lut=True, rotate=0):
+def load_dicom_image(path, img_size, voi_lut=True, rotate=0):
     dicom = pydicom.read_file(path)
     data = dicom.pixel_array
     if voi_lut:
@@ -33,8 +33,9 @@ def load_dicom_image(path, img_size=SIZE, voi_lut=True, rotate=0):
 
 def load_dicom_images_3d(
     scan_id,
-    num_imgs=NUM_IMAGES,
-    img_size=SIZE,
+    num_imgs,
+    img_size,
+    data_directory,
     mri_type="FLAIR",
     split="train",
     rotate=0,

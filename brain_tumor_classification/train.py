@@ -49,12 +49,14 @@ train_data = BrainTumorClassificationDataset(
     df_train["MGMT_value"].values,
     df_train["MRI_Type"].values,
     augment=True,
+    data_directory=config["data_directory"],
 )
 
 valid_data = BrainTumorClassificationDataset(
     df_valid["BraTS21ID"].values,
     df_valid["MGMT_value"].values,
     df_valid["MRI_Type"].values,
+    data_directory=config["data_directory"],
 )
 
 train_loader = torch.utils.DataLoader(
@@ -104,5 +106,5 @@ for mtype in config["mri_types"]:
     pred = predict(model, submission, mtype, split="test")
     submission["MGMT_value"] += pred["MGMT_value"]
 
-submission["MGMT_value"] /= len(modelfiles)
+submission["MGMT_value"] /= len(config["mri_types"])
 submission["MGMT_value"].to_csv("submission.csv")

@@ -13,6 +13,10 @@ class BrainTumorClassificationDataset(torch.utils.Dataset):
         label_smoothing=0.01,
         split="train",
         augment=False,
+        num_images=64,
+        img_size=256,
+        data_directory=None,
+    
     ):
         self.paths = paths
         self.targets = targets
@@ -20,7 +24,9 @@ class BrainTumorClassificationDataset(torch.utils.Dataset):
         self.label_smoothing = label_smoothing
         self.split = split
         self.augment = augment
-
+        self.num_images = num_images
+        self.img_size = img_size
+        self.data_directory = data_directory
     def __len__(self):
         return len(self.paths)
 
@@ -28,12 +34,19 @@ class BrainTumorClassificationDataset(torch.utils.Dataset):
         scan_id = self.paths[index]
         if self.targets is None:
             data = load_dicom_images_3d(
-                str(scan_id).zfill(5), mri_type=self.mri_type[index], split=self.split
+                str(scan_id).zfill(5),
+                num_images=self.num_images,
+                img_size=self.img_size,
+                mri_type=self.mri_type[index], 
+                split=self.split
             )
         else:
             rotation = np.random.randint(0, 4) if self.augment else 0
             data = load_dicom_images_3d(
                 str(scan_id).zfill(5),
+                num_images=self.num_images,
+                img_size=self.img_size,
+                data_directory=self.data_directory,
                 mri_type=self.mri_type[index],
                 split="train",
                 rotate=rotation,
