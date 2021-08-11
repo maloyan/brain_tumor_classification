@@ -1,0 +1,13 @@
+{
+    "seed": 42,
+    "data_directory": "../input/rsna-miccai-brain-tumor-radiogenomic-classification",
+    "pytorch3dpath": "../input/efficientnetpyttorch3d/EfficientNet-PyTorch-3D",
+    "mri_types": [
+        "FLAIR",
+        "T1w",
+        "T1wCE",
+        "T2w"
+    ],
+    "SIZE": 256,
+    "NUM_IMAGES": 64
+}
