@@ -6,6 +6,7 @@ import torch
 import torch.nn.functional as F
 import wandb
 from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
 
 from brain_tumor_classification.dataset import BrainTumorClassificationDataset
 from brain_tumor_classification.engine import eval_fn, train_fn
@@ -16,7 +17,7 @@ from brain_tumor_classification.utils import set_seed
 with open(sys.argv[1], "r") as f:
     config = json.load(f)
 
-wandb.init(config=config, project="feta")
+wandb.init(config=config, project=config["project"])
 
 set_seed(config["seed"])
 
@@ -59,28 +60,29 @@ valid_data = BrainTumorClassificationDataset(
     data_directory=config["data_directory"],
 )
 
-train_loader = torch.utils.DataLoader(
+train_loader = DataLoader(
     train_data,
     batch_size=config["batch_size"],
     shuffle=True,
     num_workers=config["num_workers"],
 )
 
-valid_loader = torch.utils.DataLoader(
+valid_loader = DataLoader(
     valid_data,
-    batch_size=4,
+    batch_size=config["batch_size"],
     shuffle=False,
-    num_workers=8,
+    num_workers=config["num_workers"],
 )
 
 model = BrainTumorClassificationModel()
+model.to(config["device"])
 model = torch.nn.DataParallel(model, device_ids=config["device_ids"])
 
 criterion = F.binary_cross_entropy_with_logits
 
 optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"])
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    factor=config["reduce_factor"], patience=config["patience"]
+    optimizer=optimizer, factor=config["reduce_factor"], patience=config["patience"]
 )
 
 best_loss = 1000
@@ -88,7 +90,12 @@ for _ in range(config["epochs"]):
     train_loss = train_fn(
         train_loader, model, optimizer, criterion, config["device"], scheduler
     )
-    val_loss, val_roc_auc = eval_fn(valid_loader, model, criterion, config["device"])
+    val_loss, val_roc_auc = eval_fn(
+        valid_loader, model, criterion, config["device"]
+    )
+    
+    scheduler.step(val_loss)
+
     if val_loss < best_loss:
         torch.save(
             model.module, f"checkpoints/{config['mri_type']}_{config['model_name']}.pt"
@@ -103,7 +110,7 @@ submission = pd.read_csv(
 
 submission["MGMT_value"] = 0
 for mtype in config["mri_types"]:
-    pred = predict(model, submission, mtype, split="test")
+    pred = predict(model, submission, mtype, split="test", config=config)
     submission["MGMT_value"] += pred["MGMT_value"]
 
 submission["MGMT_value"] /= len(config["mri_types"])

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+from efficientnet_pytorch_3d import EfficientNet3D
 
 class BrainTumorClassificationModel(nn.Module):
     def __init__(self):

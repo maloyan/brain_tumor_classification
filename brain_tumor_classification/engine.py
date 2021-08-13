@@ -20,7 +20,7 @@ def train_fn(data_loader, model, optimizer, criterion, device, scheduler):
         sum_loss += loss.detach().item()
 
         optimizer.step()
-        scheduler.step()
+
     return sum_loss / len(data_loader)
 
 

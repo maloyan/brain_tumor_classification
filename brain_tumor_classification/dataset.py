@@ -1,10 +1,10 @@
 import numpy as np
 import torch
+from torch.utils.data import Dataset
 
 from brain_tumor_classification.utils import load_dicom_images_3d
 
-
-class BrainTumorClassificationDataset(torch.utils.Dataset):
+class BrainTumorClassificationDataset(Dataset):
     def __init__(
         self,
         paths,
@@ -35,7 +35,7 @@ class BrainTumorClassificationDataset(torch.utils.Dataset):
         if self.targets is None:
             data = load_dicom_images_3d(
                 str(scan_id).zfill(5),
-                num_images=self.num_images,
+                num_imgs=self.num_images,
                 img_size=self.img_size,
                 mri_type=self.mri_type[index], 
                 split=self.split
@@ -44,7 +44,7 @@ class BrainTumorClassificationDataset(torch.utils.Dataset):
             rotation = np.random.randint(0, 4) if self.augment else 0
             data = load_dicom_images_3d(
                 str(scan_id).zfill(5),
-                num_images=self.num_images,
+                num_imgs=self.num_images,
                 img_size=self.img_size,
                 data_directory=self.data_directory,
                 mri_type=self.mri_type[index],
