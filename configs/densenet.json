@@ -1,7 +1,7 @@
 {
     "project": "Brain Tumor",
-    "model_name": "efficientnet3d",
-    "backbone": "efficientnet-b4",
+    "model_name": "DenseNet201",
+    "backbone": "",
     "seed": 42,
     "data_directory": "data",
     "mri_types": [
@@ -11,7 +11,7 @@
         "T2w"
     ],
     "mri_type": "FLAIR",
-    "batch_size": 100,
+    "batch_size": 40,
     "num_workers": 20,
     "device": "cuda",
     "lr": 0.00015,

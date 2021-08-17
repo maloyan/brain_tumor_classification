@@ -37,6 +37,7 @@ class BrainTumorClassificationDataset(Dataset):
                 str(scan_id).zfill(5),
                 num_imgs=self.num_images,
                 img_size=self.img_size,
+                data_directory=self.data_directory,
                 mri_type=self.mri_type[index], 
                 split=self.split
             )

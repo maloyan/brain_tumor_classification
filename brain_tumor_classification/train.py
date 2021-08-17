@@ -11,13 +11,16 @@ from torch.utils.data import DataLoader
 from brain_tumor_classification.dataset import BrainTumorClassificationDataset
 from brain_tumor_classification.engine import eval_fn, train_fn
 from brain_tumor_classification.model import BrainTumorClassificationModel
-from brain_tumor_classification.predict import predict
 from brain_tumor_classification.utils import set_seed
 
 with open(sys.argv[1], "r") as f:
     config = json.load(f)
 
-wandb.init(config=config, project=config["project"])
+wandb.init(
+    config=config, 
+    project=config["project"],
+    name=f"{config['mri_type']}_{config['model_name']}_{config['backbone']}"
+)
 
 set_seed(config["seed"])
 
@@ -74,7 +77,7 @@ valid_loader = DataLoader(
     num_workers=config["num_workers"],
 )
 
-model = BrainTumorClassificationModel()
+model = BrainTumorClassificationModel(config["backbone"])
 model.to(config["device"])
 model = torch.nn.DataParallel(model, device_ids=config["device_ids"])
 
@@ -82,7 +85,7 @@ criterion = F.binary_cross_entropy_with_logits
 
 optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"])
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer=optimizer, factor=config["reduce_factor"], patience=config["patience"]
+    optimizer=optimizer, factor=config["reduce_factor"], patience=config["patience"], verbose=True
 )
 
 best_loss = 1000
@@ -97,21 +100,10 @@ for _ in range(config["epochs"]):
     scheduler.step(val_loss)
 
     if val_loss < best_loss:
+        best_loss = val_loss
         torch.save(
-            model.module, f"checkpoints/{config['mri_type']}_{config['model_name']}.pt"
+            model.module, f"checkpoints/{config['mri_type']}_{config['model_name']}_{config['backbone']}.pt"
         )
     wandb.log(
         {"train_loss": train_loss, "val_loss": val_loss, "val_roc_auc": val_roc_auc}
     )
-
-submission = pd.read_csv(
-    f"{config['data_directory']}/sample_submission.csv", index_col="BraTS21ID"
-)
-
-submission["MGMT_value"] = 0
-for mtype in config["mri_types"]:
-    pred = predict(model, submission, mtype, split="test", config=config)
-    submission["MGMT_value"] += pred["MGMT_value"]
-
-submission["MGMT_value"] /= len(config["mri_types"])
-submission["MGMT_value"].to_csv("submission.csv")
