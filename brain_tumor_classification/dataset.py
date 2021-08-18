@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from brain_tumor_classification.utils import load_dicom_images_3d
+from brain_tumor_classification.utils import *
 
 class VoxelBrainDataset(Dataset):
     def __init__(
