@@ -19,7 +19,7 @@ with open(sys.argv[1], "r") as f:
 wandb.init(
     config=config, 
     project=config["project"],
-    name=f"{config['mri_type']}_{config['model_name']}_{config['backbone']}"
+    name=f"voxel_{config['model_name']}"
 )
 
 set_seed(config["seed"])
@@ -86,7 +86,7 @@ for _ in range(config["epochs"]):
     if val_loss < best_loss:
         best_loss = val_loss
         torch.save(
-            model.module, f"checkpoints/{config['mri_type']}_{config['model_name']}_{config['backbone']}.pt"
+            model.module, f"checkpoints/voxel_{config['model_name']}.pt"
         )
     wandb.log(
         {"train_loss": train_loss, "val_loss": val_loss, "val_roc_auc": val_roc_auc}
