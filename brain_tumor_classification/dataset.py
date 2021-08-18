@@ -21,8 +21,6 @@ class VoxelBrainDataset(Dataset):
         self.mri_types = mri_types
         self.label_smoothing = label_smoothing
         self.split = split
-        self.augment = augment
-        self.num_images = num_images
         self.img_size = img_size
         self.data_directory = data_directory
     def __len__(self):
