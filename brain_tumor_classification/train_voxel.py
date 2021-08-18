@@ -24,7 +24,7 @@ wandb.init(
 
 set_seed(config["seed"])
 
-train_df = pd.read_csv(f"{config['data_directory']}/train_labels.csv")
+train_df = pd.read_csv(f"{config['csv_data_directory']}/train_labels.csv")
 
 df_train, df_valid = train_test_split(
     train_df,

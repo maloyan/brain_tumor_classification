@@ -3,6 +3,7 @@
     "model_name": "SEResNet50",
     "backbone": "",
     "seed": 42,
+    "csv_data_directory": "data",
     "data_directory": "data/voxel",
     "mri_types": [
         "FLAIR",
