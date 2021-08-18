@@ -31,7 +31,7 @@ class VoxelBrainDataset(Dataset):
     def __getitem__(self, index):
         scan_id = self.patients[index]
         data = load_voxel(
-            data_root = self.data_directory
+            data_root = self.data_directory,
             study_id = str(scan_id).zfill(5),
             mri_types = self.mri_types,
             split = self.split,
