@@ -9,6 +9,12 @@ import pydicom
 import torch
 from pydicom.pixel_data_handlers.util import apply_voi_lut
 
+def load_voxel(data_root, study_id, mri_types, split="train", sz=256):
+    voxels = []
+    for scan_type in mri_types:
+        npy_path = os.path.join(data_root, "voxel", split, study_id, f"{scan_type}.npy")
+        voxels.append(np.load(str(npy_path)))
+    return voxels
 
 def load_dicom_image(path, img_size, voi_lut=True, rotate=0):
     dicom = pydicom.read_file(path)

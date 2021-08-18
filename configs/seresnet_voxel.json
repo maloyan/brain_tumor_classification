@@ -1,0 +1,26 @@
+{
+    "project": "Brain Tumor",
+    "model_name": "SEResNet50",
+    "backbone": "",
+    "seed": 42,
+    "data_directory": "data/voxel",
+    "mri_types": [
+        "FLAIR",
+        "T1w",
+        "T1wCE",
+        "T2w"
+    ],
+    "batch_size": 40,
+    "num_workers": 20,
+    "device": "cuda",
+    "lr": 0.00002,
+    "epochs": 50,
+    "reduce_factor": 0.8,
+    "patience": 3,
+    "device_ids": [
+        0,
+        1,
+        2
+    ],
+    "SIZE": 256,
+}
