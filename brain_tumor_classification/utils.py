@@ -13,7 +13,11 @@ def load_voxel(data_root, study_id, mri_types, split="train", sz=256):
     voxels = []
     for scan_type in mri_types:
         npy_path = os.path.join(data_root, split, study_id, f"{scan_type}.npy")
-        voxels.append(np.load(str(npy_path)))
+        try:
+            voxel = np.load(str(npy_path))
+        except:
+            voxel = np.zeros((sz, sz, sz))
+        voxels.append(voxel)
     return voxels
 
 def load_dicom_image(path, img_size, voi_lut=True, rotate=0):
