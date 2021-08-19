@@ -11,7 +11,7 @@ from brain_tumor_classification.model import BrainTumorClassificationModel
 def predict(model_path, df, mri_types, split, config):
 
     data_retriever = VoxelBrainDataset(
-        patients=df["index"]values,
+        patients=df["index"].values,
         targets=None,
         mri_types=df["MRI_Type"].values, 
         split=split,
