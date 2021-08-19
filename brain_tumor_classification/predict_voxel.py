@@ -59,7 +59,7 @@ with open(sys.argv[1], "r") as f:
     config = json.load(f)
 
 submission = pd.read_csv(
-    f"{config['data_directory']}/sample_submission.csv", index_col="BraTS21ID"
+    f"{config['csv_data_directory']}/sample_submission.csv", index_col="BraTS21ID"
 )
 
 submission["MGMT_value"] = 0
