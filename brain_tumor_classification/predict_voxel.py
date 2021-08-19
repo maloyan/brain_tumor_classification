@@ -5,7 +5,7 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 
-from brain_tumor_classification.dataset import BrainTumorClassificationDataset
+from brain_tumor_classification.dataset import *
 from brain_tumor_classification.model import BrainTumorClassificationModel
 
 def predict(model_path, df, mri_types, split, config):
