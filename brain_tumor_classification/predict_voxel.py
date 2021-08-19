@@ -73,4 +73,4 @@ pred = predict(
 )
 submission["MGMT_value"] = pred["MGMT_value"]
 
-submission["MGMT_value"].to_csv("submission.csv")
+submission["MGMT_value"].to_csv("submission.csv", index=None)
