@@ -13,7 +13,7 @@ def predict(model_path, df, mri_types, split, config):
     data_retriever = VoxelBrainDataset(
         patients=df.index.values,
         targets=None,
-        mri_types=config["MRI_Type"], 
+        mri_types=mri_types, 
         split=split,
         data_directory=config["data_directory"],
     )
