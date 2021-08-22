@@ -9,7 +9,18 @@ import pydicom
 import torch
 from pydicom.pixel_data_handlers.util import apply_voi_lut
 
-def load_voxel(data_root, study_id, mri_types, split="train", sz=256):
+def load_voxel(
+    data_root, 
+    study_id, 
+    mri_types= [
+        "FLAIR",
+        "T1w",
+        "T1wCE",
+        "T2w"
+    ], 
+    split="train", 
+    sz=256
+):
     voxels = []
     for scan_type in mri_types:
         npy_path = os.path.join(data_root, split, study_id, f"{scan_type}.npy")
